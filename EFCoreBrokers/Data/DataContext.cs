@@ -13,6 +13,7 @@ namespace EFCoreBrokers.Data
         public DbSet<BrokerModel> Brokers { get; set; }
         public DbSet<ApartmentModel> Apartments { get; set; }
         public DbSet<CompanyModel> Companies { get; set; }
+        public DbSet<CompaniesBrokers> CompaniesBrokers { get; set; }
 
         public DataContext(DbContextOptions options) : base(options)
         {

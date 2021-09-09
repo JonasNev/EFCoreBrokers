@@ -11,5 +11,7 @@ namespace EFCoreBrokers.Dtos
     {
         public List<BrokerModel> Brokers { get; set; }
         public CompanyModel Company { get; set; }
+        public List<BrokerModel> CompanyBrokers { get; set; }
+        public List<int> BrokerIds { get; set; }
     }
 }
