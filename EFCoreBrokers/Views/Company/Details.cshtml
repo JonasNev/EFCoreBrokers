@@ -4,7 +4,7 @@
 
 @Html.ActionLink("Add a company", "Create", "Company", null, new { @class = "btn btn-primary float-right" })
 
-@if (Model.Brokers.Count == 0)
+@if (Model.Brokers.Count == null)
 {
     <p>There are no brokers in this company</p> }
 else

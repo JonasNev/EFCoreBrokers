@@ -1,6 +1,8 @@
 ﻿using EFCoreBrokers.Data;
+using EFCoreBrokers.Dtos;
 using EFCoreBrokers.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,6 +39,24 @@ namespace EFCoreBrokers.Controllers
             _context.SaveChanges();
 
             return RedirectToAction("Index");
+        }
+
+        public IActionResult Details(int companyId)
+        {
+            List<BrokerModel> brokers = new();
+            CompanyCreate companyCreate = new();
+            List<CompaniesBrokers> companiesBrokers = new();
+            companyCreate.Company = _context.Companies.First(x => x.Id == companyId);
+
+            companiesBrokers = _context.CompaniesBrokers.Where(x => x.CompanyId == companyId).Include(x => x.Broker).ToList();
+            foreach (var broker in companiesBrokers)
+            {
+                if (broker.CompanyId == companyId)
+                {
+                    companyCreate.CompanyBrokers.Add(broker.Broker);
+                }
+            }
+            return View(brokers);
         }
     }
 }

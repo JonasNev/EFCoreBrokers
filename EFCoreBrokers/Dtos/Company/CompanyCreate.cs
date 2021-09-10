@@ -9,9 +9,9 @@ namespace EFCoreBrokers.Dtos
 {
     public class CompanyCreate
     {
-        public List<BrokerModel> Brokers { get; set; }
+        public List<BrokerModel> Brokers { get; set; } = new();
         public CompanyModel Company { get; set; }
-        public List<BrokerModel> CompanyBrokers { get; set; }
+        public List<BrokerModel> CompanyBrokers { get; set; } = new List<BrokerModel>();
         public List<int> BrokerIds { get; set; }
     }
 }

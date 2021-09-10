@@ -2,6 +2,7 @@
 using EFCoreBrokers.Dtos;
 using EFCoreBrokers.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,17 +56,16 @@ namespace EFCoreBrokers.Controllers
         {
             CompanyCreate companyCreate = new();
             List<CompaniesBrokers> companiesBrokers = new();
-            companyCreate.Brokers = _context.Brokers.ToList();
+            companyCreate.Company = _context.Companies.First(x => x.Id == id);
 
-            companiesBrokers = _context.CompaniesBrokers.Where(x => x.CompanyId == id).ToList();
+            companiesBrokers = _context.CompaniesBrokers.Where(x => x.CompanyId == id).Include(x => x.Broker).ToList();
             foreach (var broker in companiesBrokers)
             {
-                if (broker.BrokerId == )
+                if (broker.CompanyId == id)
                 {
-
+                    companyCreate.CompanyBrokers.Add(broker.Broker);
                 }
             }
-            companyCreate.CompanyBrokers = _context.Brokers.Where(x => x.Id == 0).ToList();
 
             return View(companyCreate);
         }
@@ -77,5 +77,49 @@ namespace EFCoreBrokers.Controllers
             id = companies[0].Id;
             return id;
         }
+
+        public IActionResult Edit(int id)
+        {
+            CompanyCreate company = new();
+            List<CompaniesBrokers> companiesBrokers = new();
+            company.Company = _context.Companies.FirstOrDefault(x => x.Id == id);
+            company.Brokers = _context.Brokers.ToList();
+            companiesBrokers = _context.CompaniesBrokers.Where(x => x.CompanyId == id).Include(x => x.Broker).ToList();
+            foreach (var broker in companiesBrokers)
+            {
+                if (broker.CompanyId == id)
+                {
+                    company.CompanyBrokers.Add(broker.Broker);
+                }
+            }
+            return View(company);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(CompanyCreate companyCreate)
+        {
+            CompaniesBrokers companiesBrokers = new();
+            companyCreate.Company.Address = companyCreate.Company.Street + companyCreate.Company.Number + ", " + companyCreate.Company.City;
+            _context.Companies.Update(companyCreate.Company);
+            _context.SaveChanges();
+
+            //reikia sutvarkyti junction seno istrynima ir naujo pridejima
+            foreach (var broker in companyCreate.Brokers)
+            {
+                companiesBrokers.BrokerId = broker.Id;
+                companiesBrokers.CompanyId = companyCreate.Company.Id;
+
+                _context.CompaniesBrokers.Add(companiesBrokers);
+                _context.SaveChanges();
+            }
+            // _context.CompaniesBrokers.RemoveRange()
+            return RedirectToAction("Index");
+        }
+
+        public void AddJunction()
+        {
+
+        }
     }
+
 }
