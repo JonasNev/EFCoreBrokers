@@ -87,11 +87,17 @@ namespace EFCoreBrokers.Controllers
             companiesBrokers = _context.CompaniesBrokers.Where(x => x.CompanyId == id).Include(x => x.Broker).ToList();
             foreach (var broker in companiesBrokers)
             {
+                _context.CompaniesBrokers.Remove(broker);
+                _context.SaveChanges();
+            }
+            foreach (var broker in companiesBrokers)
+            {
                 if (broker.CompanyId == id)
                 {
                     company.CompanyBrokers.Add(broker.Broker);
                 }
             }
+
             return View(company);
         }
 
@@ -102,20 +108,31 @@ namespace EFCoreBrokers.Controllers
             companyCreate.Company.Address = companyCreate.Company.Street + companyCreate.Company.Number + ", " + companyCreate.Company.City;
             _context.Companies.Update(companyCreate.Company);
             _context.SaveChanges();
-
-            //reikia sutvarkyti junction seno istrynima ir naujo pridejima
-            foreach (var broker in companyCreate.Brokers)
+            companiesBrokers.CompanyId = companyCreate.Company.Id;
+            foreach (var broker in companyCreate.BrokerIds)
             {
-                companiesBrokers.BrokerId = broker.Id;
-                companiesBrokers.CompanyId = companyCreate.Company.Id;
-
+                companiesBrokers.BrokerId = broker;
                 _context.CompaniesBrokers.Add(companiesBrokers);
                 _context.SaveChanges();
             }
-            // _context.CompaniesBrokers.RemoveRange()
             return RedirectToAction("Index");
         }
 
+        public IActionResult Remove(int Id)
+        {
+            CompanyCreate company = new();
+            List<CompaniesBrokers> companiesBrokers = new();
+            company.Company = _context.Companies.FirstOrDefault(x => x.Id == Id);
+            companiesBrokers = _context.CompaniesBrokers.Where(x => x.CompanyId == Id).Include(x => x.Broker).ToList();
+            foreach (var broker in companiesBrokers)
+            {
+                _context.CompaniesBrokers.Remove(broker);
+                _context.SaveChanges();
+            }
+            _context.Companies.Remove(company.Company);
+            _context.SaveChanges();
+            return RedirectToAction("Index");
+        }
         public void AddJunction()
         {
 

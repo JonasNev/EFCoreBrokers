@@ -25,7 +25,7 @@ else
                     <td class="text-center">@company.Address</td>
                     <td class="text-center">
                         @Html.ActionLink("Edit", "Edit", "Company", new { id = company.Id }, new { @class = "btn btn-warning", @style = "color:white" })
-                        @Html.ActionLink("Delete", "Delete", "Company", new { id = company.Id }, new { @class = "btn btn-danger", @style = "color:white" })
+                        @Html.ActionLink("Remove", "Remove", "Company", new { id = company.Id }, new { @class = "btn btn-danger", @style = "color:white" })
                     </td>
                 </tr>
             }
