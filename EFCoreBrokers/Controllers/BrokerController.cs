@@ -58,5 +58,37 @@ namespace EFCoreBrokers.Controllers
             }
             return View(brokers);
         }
+
+        public IActionResult Remove(int id)
+        {
+            List<CompaniesBrokers> companiesBrokers = _context.CompaniesBrokers.ToList();
+            BrokerModel model = _context.Brokers.First(x => x.Id == id);
+            List<CompanyModel> companies = _context.Companies.ToList();
+            //Neveikia, nes brokerid key kazkur naudojamas
+            foreach (var broker in companiesBrokers)
+            {
+                broker.BrokerId = id;
+                broker.Company = companies.First(x => x.Id == broker.CompanyId);
+                _context.CompaniesBrokers.Remove(broker);
+                _context.SaveChanges(); 
+            }
+
+            _context.Brokers.Remove(model);
+            _context.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult Edit(int id)
+        {
+            BrokerModel model = _context.Brokers.First(x => x.Id == id);
+            return View(model);
+        }
+        [HttpPost]
+        public IActionResult Edit(BrokerModel model)
+        {
+            _context.Brokers.Update(model);
+            _context.SaveChanges();
+            return RedirectToAction("Index");
+        }
     }
 }
