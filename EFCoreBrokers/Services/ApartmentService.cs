@@ -65,9 +65,11 @@ namespace EFCoreBrokers.Services
             _context.SaveChanges();
         }
 
-        public void DeleteApartment(int deleteid)
+        public void DeleteApartment(int id)
         {
-            
+            ApartmentModel apartmentModel = _context.Apartments.First(x => x.Id == id);
+            _context.Apartments.Remove(apartmentModel);
+            _context.SaveChanges();
         }
 
     }
