@@ -35,9 +35,27 @@ namespace EFCoreBrokers.Services
 
         }
 
-        public void DeleteCompany(int deleteid)
+        public void DeleteCompany(int id)
         {
-            
+            CompanyCreate company = new();
+            List<CompaniesBrokers> companiesBrokers = new();
+            company.Company = _context.Companies.FirstOrDefault(x => x.Id == id);
+            companiesBrokers = _context.CompaniesBrokers.Where(x => x.CompanyId == id).Include(x => x.Broker).ToList();
+            List<ApartmentModel> apartments = _context.Apartments.ToList();
+            foreach (var broker in companiesBrokers)
+            {
+                _context.CompaniesBrokers.Remove(broker);
+                _context.SaveChanges();
+            }
+            foreach (var apartment in apartments)
+            {
+                if (apartment.Company_id == id)
+                {
+                    _context.Apartments.Remove(apartment);
+                }
+            }
+            _context.Companies.Remove(company.Company);
+            _context.SaveChanges();
         }
 
         public CompanyCreate GetCompanyDetails(int id)
@@ -53,7 +71,7 @@ namespace EFCoreBrokers.Services
                 {
                     companyCreate.CompanyBrokers.Add(broker.Broker);
                 }
-            }
+            }     
             return companyCreate;
         }
 

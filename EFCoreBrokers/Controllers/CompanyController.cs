@@ -62,28 +62,9 @@ namespace EFCoreBrokers.Controllers
             return RedirectToAction("Index");
         }
 
-        public IActionResult Remove(int Id)
+        public IActionResult Remove(int id)
         {
-            CompanyCreate company = new();
-            List<CompaniesBrokers> companiesBrokers = new();
-            company.Company = _context.Companies.FirstOrDefault(x => x.Id == Id);
-            companiesBrokers = _context.CompaniesBrokers.Where(x => x.CompanyId == Id).Include(x => x.Broker).ToList();
-            List<ApartmentModel> apartments = _context.Apartments.ToList();
-            foreach (var broker in companiesBrokers)
-            {
-                _context.CompaniesBrokers.Remove(broker);
-                _context.SaveChanges();
-            }
-            foreach (var apartment in apartments)
-            {
-                if (apartment.Company_id == Id)
-                {
-                    _context.Apartments.Remove(apartment);
-
-                }
-            }
-            _context.Companies.Remove(company.Company);
-            _context.SaveChanges();
+            _companyService.DeleteCompany(id);
             return RedirectToAction("Index");
         }
     }
