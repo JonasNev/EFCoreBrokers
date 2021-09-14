@@ -1,5 +1,43 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@model List<ApartmentModel>
+
+<h2 class="d-inline-block mb-4">Apartments</h2>
+
+@Html.ActionLink("Add an apartment", "Create", "Apartment", null, new { @class = "btn btn-primary float-right" })
+
+
+
+@if (Model.Count == 0)
+{
+<p>There are no Apartments listed</p> }
+else
+{
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th class="text-center">Apartment address</th>
+            <th class="text-center">Company name</th>
+            <th class="text-center">Assigned broker</th>
+            <th class="text-center">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var apartment in Model)
+        {
+<tr>
+    <td class="text-center">@apartment.Address</td>
+    <td class="text-center">@Html.ActionLink(apartment.Company.Name, "Details", "Company", new { id = apartment.Company_id })</td>
+    @if (apartment.Broker_id != null)
+    {
+<td class="text-center">@apartment.Broker.Name</td> }
+                    else
+                    {
+<td class="text-center">Broker not assigned</td>                    }
+
+    <td class="text-center">
+        @Html.ActionLink("Edit", "Edit", "Apartment", new { id = apartment.Id }, new { @class = "btn btn-warning", @style = "color:white" })
+        @Html.ActionLink("Remove", "Remove", "Apartment", new { id = apartment.Id }, new { @class = "btn btn-danger", @style = "color:white" })
+    </td>
+
+</tr>}
+    </tbody>
+</table>}

@@ -1,4 +1,5 @@
 using EFCoreBrokers.Data;
+using EFCoreBrokers.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -27,6 +28,9 @@ namespace EFCoreBrokers
         {
             var connectionString = Configuration.GetConnectionString("Default");
             services.AddDbContext<DataContext>(d => d.UseSqlServer(connectionString));
+            services.AddScoped<BrokerService>();
+            services.AddScoped<CompanyService>();
+            services.AddScoped<ApartmentService>();
             services.AddControllersWithViews();
         }
 

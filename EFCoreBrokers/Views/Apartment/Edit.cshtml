@@ -1,8 +1,8 @@
 ﻿@model EFCoreBrokers.Dtos.ApartmentCreate
-.
-<h2>Add an apartment</h2>
 
-@using (Html.BeginForm("Create", "Apartment", FormMethod.Post))
+<h2>Make changes and add a broker(or more)</h2>
+
+@using (Html.BeginForm("Edit", "Apartment", FormMethod.Post))
 {
     <div class="form-group">
         @Html.LabelFor(c => c.Apartment.City, "City")
@@ -25,9 +25,12 @@
         @Html.TextBoxFor(c => c.Apartment.Floor, new { @class = "form-control" })
     </div>
     <div class="form-group">
-        @Html.LabelFor(c => c.Apartment.Company_id, "Company")
-        @Html.DropDownListFor(m => m.Apartment.Company_id, new SelectList(Model.Companies, "Id", "Name"), "", new { @class = "form-control" })
+        <label asp-for="Broker.Id" class="control-label">Broker</label>
+        <div>
+            @Html.DropDownListFor(m => m.Apartment.Broker_id, new SelectList(Model.Brokers, "Id", "Name"), "", new { @class = "form-control" })
+        </div>
     </div>
+    @Html.HiddenFor(c => c.Apartment.Id)
     @Html.HiddenFor(c => c.Apartment.Company_id)
     <button type="submit" class="btn btn-primary">Add</button>
     @Html.ActionLink("Cancel", "Index", "Company", null, new { @class = "btn btn-secondary" })

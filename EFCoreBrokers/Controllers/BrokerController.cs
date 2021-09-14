@@ -61,14 +61,12 @@ namespace EFCoreBrokers.Controllers
 
         public IActionResult Remove(int id)
         {
-            List<CompaniesBrokers> companiesBrokers = _context.CompaniesBrokers.ToList();
+            List<CompaniesBrokers> companiesBrokers = _context.CompaniesBrokers.Where(x => x.BrokerId == id).ToList();
             BrokerModel model = _context.Brokers.First(x => x.Id == id);
             List<CompanyModel> companies = _context.Companies.ToList();
             //Neveikia, nes brokerid key kazkur naudojamas
             foreach (var broker in companiesBrokers)
             {
-                broker.BrokerId = id;
-                broker.Company = companies.First(x => x.Id == broker.CompanyId);
                 _context.CompaniesBrokers.Remove(broker);
                 _context.SaveChanges(); 
             }
