@@ -1,6 +1,8 @@
 ﻿using EFCoreBrokers.Data;
 using EFCoreBrokers.Dtos;
+using EFCoreBrokers.Dtos.Broker;
 using EFCoreBrokers.Models;
+using EFCoreBrokers.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -13,15 +15,17 @@ namespace EFCoreBrokers.Controllers
     public class BrokerController : Controller
     {
         private readonly DataContext _context;
-        public BrokerController(DataContext context)
+        private readonly BrokerService _brokerService;
+        public BrokerController(DataContext context, BrokerService brokerService)
         {
+            _brokerService = brokerService;
             _context = context;
         }
 
         public IActionResult Index()
         {
-            var Brokers = _context.Brokers.ToList();
-            return View(Brokers);
+            List<BrokerModel> brokers = _brokerService.GetBrokers();
+            return View(brokers);
         }
 
         public IActionResult Create()
@@ -33,46 +37,19 @@ namespace EFCoreBrokers.Controllers
         [HttpPost]
         public IActionResult Create(BrokerModel broker)
         {
-
-            _context.Brokers.Add(broker);
-
-            _context.SaveChanges();
-
+            _brokerService.AddBroker(broker);
             return RedirectToAction("Index");
         }
 
-        public IActionResult Details(int companyId)
+        public IActionResult Details(int id)
         {
-            List<BrokerModel> brokers = new();
-            CompanyCreate companyCreate = new();
-            List<CompaniesBrokers> companiesBrokers = new();
-            companyCreate.Company = _context.Companies.First(x => x.Id == companyId);
-
-            companiesBrokers = _context.CompaniesBrokers.Where(x => x.CompanyId == companyId).Include(x => x.Broker).ToList();
-            foreach (var broker in companiesBrokers)
-            {
-                if (broker.CompanyId == companyId)
-                {
-                    companyCreate.CompanyBrokers.Add(broker.Broker);
-                }
-            }
+            BrokerDetails brokers = _brokerService.GetCertainBrokers(id);
             return View(brokers);
         }
 
         public IActionResult Remove(int id)
         {
-            List<CompaniesBrokers> companiesBrokers = _context.CompaniesBrokers.Where(x => x.BrokerId == id).ToList();
-            BrokerModel model = _context.Brokers.First(x => x.Id == id);
-            List<CompanyModel> companies = _context.Companies.ToList();
-            //Neveikia, nes brokerid key kazkur naudojamas
-            foreach (var broker in companiesBrokers)
-            {
-                _context.CompaniesBrokers.Remove(broker);
-                _context.SaveChanges(); 
-            }
-
-            _context.Brokers.Remove(model);
-            _context.SaveChanges();
+            _brokerService.DeleteBroker(id);
             return RedirectToAction("Index");
         }
 
@@ -84,8 +61,7 @@ namespace EFCoreBrokers.Controllers
         [HttpPost]
         public IActionResult Edit(BrokerModel model)
         {
-            _context.Brokers.Update(model);
-            _context.SaveChanges();
+            _brokerService.UpdateBroker(model);
             return RedirectToAction("Index");
         }
     }
