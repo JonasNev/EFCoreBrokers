@@ -1,6 +1,7 @@
 ﻿using EFCoreBrokers.Data;
 using EFCoreBrokers.Dtos;
 using EFCoreBrokers.Dtos.Broker;
+using EFCoreBrokers.Dtos.SortFilter;
 using EFCoreBrokers.Models;
 using EFCoreBrokers.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -24,7 +25,8 @@ namespace EFCoreBrokers.Controllers
 
         public IActionResult Index()
         {
-            List<BrokerModel> brokers = _brokerService.GetBrokers();
+            BrokerIndexSort brokers = new();
+            brokers.Brokers = _brokerService.GetBrokers();
             return View(brokers);
         }
 
@@ -64,5 +66,12 @@ namespace EFCoreBrokers.Controllers
             _brokerService.UpdateBroker(model);
             return RedirectToAction("Index");
         }
+
+        public IActionResult SortFilter(BrokerIndexSort sortFilter)
+        {
+            BrokerIndexSort sortModel = _brokerService.SortBrokers(sortFilter);
+            return View("Index", sortModel);
+        }
     }
+
 }

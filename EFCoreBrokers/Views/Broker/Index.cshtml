@@ -1,36 +1,46 @@
-﻿@model List<BrokerModel>
+﻿@model EFCoreBrokers.Dtos.Broker.BrokerIndexSort
 
 <h2 class="d-inline-block mb-4">Brokers</h2>
 
 @Html.ActionLink("Add a Broker", "Create", "Broker", null, new { @class = "btn btn-primary float-right" })
 
 
-@if (Model.Count == 0)
+@using (Html.BeginForm("SortFilter", "Broker", FormMethod.Post))
 {
-<p>There are no brokers</p> }
+<div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Brokers, "Select what you want to sort by : ")
+        @Html.DropDownListFor(m => m.SortBy, new SelectList(Model.SortSelection), "", new { @class = "form-control" })
+    </div>
+    <button type="submit" class="btn btn-primary">Filter</button>
+</div>}
+
+@if (Model.Brokers == null)
+{
+    <p>There are no brokers</p> }
 else
 {
-<table class="table table-bordered table-hover">
-    <thead>
-        <tr>
-            <th class="text-center">Name</th>
-            <th class="text-center">Surname</th>
-            <th class="text-center">Brokers apartments</th>
-            <th class="text-center">Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var broker in Model)
-        {
-<tr>
-    <td class="text-center">@broker.Name</td>
-    <td class="text-center">@broker.Surname</td>
-    <td class="text-center">@Html.ActionLink("Apartments", "Details", "Broker", new { id = broker.Id })</td>
-    <td class="text-center">
-        @Html.ActionLink("Remove", "Remove", "Broker", new { id = broker.Id }, new { @class = "btn btn-danger", @style = "color:white" })
-        @Html.ActionLink("Edit", "Edit", "Broker", new { id = broker.Id }, new { @class = "btn btn-warning", @style = "color:white" })
-    </td>
-</tr>
-}
-    </tbody>
-</table>}
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th class="text-center">Name</th>
+                <th class="text-center">Surname</th>
+                <th class="text-center">Brokers apartments</th>
+                <th class="text-center">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var broker in Model.Brokers)
+            {
+                <tr>
+                    <td class="text-center">@broker.Name</td>
+                    <td class="text-center">@broker.Surname</td>
+                    <td class="text-center">@Html.ActionLink("Apartments", "Details", "Broker", new { id = broker.Id })</td>
+                    <td class="text-center">
+                        @Html.ActionLink("Remove", "Remove", "Broker", new { id = broker.Id }, new { @class = "btn btn-danger", @style = "color:white" })
+                        @Html.ActionLink("Edit", "Edit", "Broker", new { id = broker.Id }, new { @class = "btn btn-warning", @style = "color:white" })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>}

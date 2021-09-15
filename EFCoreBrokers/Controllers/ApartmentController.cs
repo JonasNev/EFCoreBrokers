@@ -23,6 +23,7 @@ namespace EFCoreBrokers.Controllers
         }
         public IActionResult Index()
         {
+            
             List<ApartmentModel> apartments = _apartmentService.GetApartments();
             return View(apartments);
         }

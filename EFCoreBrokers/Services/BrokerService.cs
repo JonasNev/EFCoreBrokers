@@ -26,11 +26,22 @@ namespace EFCoreBrokers.Services
             _context.SaveChanges();
         }
 
-        public List<BrokerModel> SortBrokers(SortFilterModel sortFilter)
+        public BrokerIndexSort SortBrokers(BrokerIndexSort sortFilter) 
         {
-            List<BrokerModel> brokers = new();
-
-            return brokers;             
+            BrokerIndexSort brokers = new();
+            switch (sortFilter.SortBy)
+            {
+                case "Name":
+                    brokers.Brokers = _context.Brokers.OrderBy(x => x.Name).ToList();
+                    break;
+                case "Surname":
+                    brokers.Brokers = _context.Brokers.OrderBy(x => x.Surname).ToList();
+                    break;
+                default:
+                    brokers.Brokers = _context.Brokers.OrderBy(x => x.Name).ToList();
+                    break;
+            }
+            return brokers;
         }
         public List<BrokerModel> GetBrokers()
         {
