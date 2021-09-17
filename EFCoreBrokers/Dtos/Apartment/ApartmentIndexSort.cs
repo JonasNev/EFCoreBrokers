@@ -12,9 +12,9 @@ namespace EFCoreBrokers.Dtos.Apartment
         public List<ApartmentModel> Apartments { get; set; }
         public SortFilterModel SortFilter { get; set; }
         public ApartmentModel ApartmentFilter { get; set; }
-        public CompanyModel CompanyFilter { get; set; }
+        public int CompanyFilterId { get; set; }
         public List<CompanyModel> Companies { get; set; }
-        public BrokerModel BrokerFilter { get; set; }
+        public int BrokerFilterId { get; set; }
         public List<BrokerModel> Brokers { get; set; }
 
 

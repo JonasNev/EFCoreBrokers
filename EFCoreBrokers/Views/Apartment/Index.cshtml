@@ -14,11 +14,11 @@
         </div>
         <div class="form-group">
             @Html.LabelFor(m => m.Companies, "Select what Company you want to filter by: ")
-            @Html.DropDownListFor(m => m.CompanyFilter.Id, new SelectList(Model.Companies, "Id", "Name"), "", new { @class = "form-control" })
+            @Html.DropDownListFor(m => m.CompanyFilterId, new SelectList(Model.Companies, "Id", "Name"), "", new { @class = "form-control" })
         </div>
         <div class="form-group">
             @Html.LabelFor(m => m.Brokers, "Select what Broker you want to filter by: ")
-            @Html.DropDownListFor(m => m.BrokerFilter.Id, new SelectList(Model.Brokers, "Id", "Name"), "", new { @class = "form-control" })
+            @Html.DropDownListFor(m => m.BrokerFilterId, new SelectList(Model.Brokers, "Id", "Name"), "", new { @class = "form-control" })
         </div>
         <button type="submit" class="btn btn-primary">Filter</button>
     </div>

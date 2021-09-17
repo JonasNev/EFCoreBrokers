@@ -79,15 +79,15 @@ namespace EFCoreBrokers.Services
             model.Apartments = GetApartments();
             if (apartmentIndexSort.ApartmentFilter.City != null)
             {
-                model.Apartments.Where(a => a.City == apartmentIndexSort.ApartmentFilter.City).ToList();
+                model.Apartments = model.Apartments.Where(a => a.City == apartmentIndexSort.ApartmentFilter.City).ToList();
             }
-            if (apartmentIndexSort.CompanyFilter.Id != 0)
+            if (apartmentIndexSort.CompanyFilterId != 0)
             {
-                model.Apartments.Where(a => a.Company_id == apartmentIndexSort.CompanyFilter.Id).ToList();
+                model.Apartments = model.Apartments.Where(a => a.Company_id == apartmentIndexSort.CompanyFilterId).ToList();
             }
-            if (apartmentIndexSort.BrokerFilter.Id != 0)
+            if (apartmentIndexSort.BrokerFilterId != 0)
             {
-                model.Apartments.Where(a => a.Broker_id == apartmentIndexSort.BrokerFilter.Id).ToList();
+                model.Apartments = model.Apartments.Where(a => a.Broker_id == apartmentIndexSort.BrokerFilterId).ToList();
             }
 
             return model;
