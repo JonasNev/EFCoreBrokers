@@ -1,4 +1,5 @@
-﻿using EFCoreBrokers.Models;
+﻿using EFCoreBrokers.Dtos.SortFilter;
+using EFCoreBrokers.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,8 @@ namespace EFCoreBrokers.Dtos
         public CompanyModel Company { get; set; }
         public List<CompanyModel> Companies { get; set; }
         public List<BrokerModel> Brokers { get; set; } = new();
-        public List<CompaniesBrokers> companiesBrokers { get; set; }
+        public List<CompaniesBrokers> CompaniesBrokers { get; set; }
+        public SortFilterModel SortFilter { get; set; }
 
     }
 }

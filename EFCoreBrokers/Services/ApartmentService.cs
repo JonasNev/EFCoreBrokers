@@ -1,5 +1,6 @@
 ﻿using EFCoreBrokers.Data;
 using EFCoreBrokers.Dtos;
+using EFCoreBrokers.Dtos.Apartment;
 using EFCoreBrokers.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -30,8 +31,8 @@ namespace EFCoreBrokers.Services
             ApartmentCreate apartment = new ApartmentCreate();
             apartment.Apartment = _context.Apartments.First(x => x.Id == id);
             apartment.Company = _context.Companies.First(x => x.Id == apartment.Apartment.Company_id);
-            apartment.companiesBrokers = _context.CompaniesBrokers.Where(x => x.CompanyId == apartment.Company.Id).Include(x => x.Broker).ToList();
-            foreach (var broker in apartment.companiesBrokers)
+            apartment.CompaniesBrokers = _context.CompaniesBrokers.Where(x => x.CompanyId == apartment.Company.Id).Include(x => x.Broker).ToList();
+            foreach (var broker in apartment.CompaniesBrokers)
             {
                 if (broker.CompanyId == apartment.Company.Id)
                 {
@@ -70,6 +71,27 @@ namespace EFCoreBrokers.Services
             ApartmentModel apartmentModel = _context.Apartments.First(x => x.Id == id);
             _context.Apartments.Remove(apartmentModel);
             _context.SaveChanges();
+        }
+
+        public ApartmentIndexSort FilterAndSortApartments(ApartmentIndexSort apartmentIndexSort)
+        {
+            ApartmentIndexSort model = new();
+            model.Apartments = GetApartments();
+            if (apartmentIndexSort.ApartmentFilter.City != null)
+            {
+                model.Apartments.Where(a => a.City == apartmentIndexSort.ApartmentFilter.City).ToList();
+            }
+            if (apartmentIndexSort.CompanyFilter.Id != 0)
+            {
+                model.Apartments.Where(a => a.Company_id == apartmentIndexSort.CompanyFilter.Id).ToList();
+            }
+            if (apartmentIndexSort.BrokerFilter.Id != 0)
+            {
+                model.Apartments.Where(a => a.Broker_id == apartmentIndexSort.BrokerFilter.Id).ToList();
+            }
+
+            return model;
+
         }
 
     }

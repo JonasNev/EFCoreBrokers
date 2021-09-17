@@ -1,5 +1,6 @@
 ﻿using EFCoreBrokers.Data;
 using EFCoreBrokers.Dtos;
+using EFCoreBrokers.Dtos.Apartment;
 using EFCoreBrokers.Models;
 using EFCoreBrokers.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -23,8 +24,13 @@ namespace EFCoreBrokers.Controllers
         }
         public IActionResult Index()
         {
-            
-            List<ApartmentModel> apartments = _apartmentService.GetApartments();
+
+            ApartmentIndexSort apartments = new()
+            {
+                Apartments = _apartmentService.GetApartments(),
+                Brokers = _context.Brokers.ToList(),
+                Companies = _context.Companies.ToList()
+            };
             return View(apartments);
         }
 
@@ -59,6 +65,14 @@ namespace EFCoreBrokers.Controllers
         {
             _apartmentService.DeleteApartment(id);
             return RedirectToAction("Index");
+        }
+
+        public IActionResult SortFilter(ApartmentIndexSort sortFilter)
+        {
+            ApartmentIndexSort sortModel = _apartmentService.FilterAndSortApartments(sortFilter);
+            sortModel.Brokers = _context.Brokers.ToList();
+            sortModel.Companies = _context.Companies.ToList();
+            return View("Index", sortModel);
         }
     }
 }
